@@ -12,8 +12,8 @@ espacios_blanco = r'[ \t]+'  # Para los espacios en blanco
 # Lista de tokens. Siempre REQUERIDO
 tokens = (
     "PALABRA",
-    "NUMERO",
     "HEX", #Expresión para hexa en C
+    "NUMERO",
     "PALABRA_RESERVADA", #Palabras reservadas de C
     "IDENTIFICADOR", #Identificadores con log de 32
     "ESPACIO", #Espacios en blanco
@@ -27,14 +27,15 @@ t_PARIZQ = r'\('
 t_PARDER = r'\)'
 
 # Definición de reglas con acción léxica
-@TOKEN(r'(' + digito + r')+')
-def t_NUMERO(t):
-    print("Encontré un número:", t.value)
-    return t
 
 @TOKEN(hexadecimal)
 def t_HEX(t):
     print("Encontré un número hexadecimal:", t.value)
+    return t
+    
+@TOKEN(r'(' + digito + r')+')
+def t_NUMERO(t):
+    print("Encontré un número:", t.value)
     return t
 
 @TOKEN(r'(def|class|import|if|else)\b')  # 5 palabras reservadas de Python
