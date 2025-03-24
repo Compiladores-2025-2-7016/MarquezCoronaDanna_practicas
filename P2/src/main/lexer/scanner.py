@@ -6,28 +6,98 @@ from componente.componente_lexico import ComponenteLexico
 # FIXME: agreguemos definiciones de regexp o funciones para reconocer el resto de palabras en el lenguaje.
 class Lexer(object):
     # Definiciones de expresiones regulares auxiliares
-    digito = r'[0-9]'
-    numero = r'(' + digito + r')+'
-    letra = r'[a-zA-Z]'
+    numero = r'[0-9]+(\.[0-9]+(e[0-9]+)?)?'
+    int_re= r'\bint\b'
+    float_re= r'\bfloat\b'
+    if_re = r'\bif\b'
+    else_re= r'\belse\b'
+    while_re= r'\bwhile\b'
+    pyc_re= r';'
+    coma = r','
+    id_re= r'[a-zA-Z0-9_]+'
 
 
     # Lista de tokens. Siempre REQUERIDO
     tokens = list(ClaseLexica._member_names_) 
 
 
-    # Definición de reglas en una sóla línea sin acción léxica
-    t_PALABRA = r'(' + letra + r'+)' # FIXME: esta línea no la necesitamos
-    t_PARIZQ = r'\('
-    t_PARDER = r'\)'
+    # Definición de reglas en una sóla línea sin acción léxicas
     t_ESPACIO = r'\ +'
 
     # Definición de reglas con acción léxica
-    #@TOKEN(numero)
-    @TOKEN(r'(' + digito + r')+')
-    def t_NUMERO(self, t):
-        print("Encontré un número:", t.value)
+    #@TOKEN(() parentesis izq
+    @TOKEN(r'\(')
+    def t_LPAR(self, t):
+        print(ComponenteLexico(t.type, t.value))
         return t
 
+
+    #@TOKEN(() parentesis der
+    @TOKEN(r'\)')
+    def t_RPAR(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(int)
+    @TOKEN(int_re)
+    def t_INT(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(float)
+    @TOKEN(float_re)
+    def t_FLOAT(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(if)
+    @TOKEN(if_re)
+    def t_IF(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+   
+   #@TOKEN(else)
+    @TOKEN(else_re)
+    def t_ELSE(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(while)
+    @TOKEN(while_re)
+    def t_WHILE(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(pyc)
+    @TOKEN(pyc_re)
+    def t_PYC(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(coma)
+    @TOKEN(coma)
+    def t_COMA(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+
+    #@TOKEN(numero)
+    @TOKEN(numero)
+    def t_NUMERO(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
+
+    #@TOKEN(id)
+    @TOKEN(id_re)
+    def t_ID(self, t):
+        print(ComponenteLexico(t.type, t.value))
+        return t
 
     # Definimos una regla para el manejo de número de líneas
     def t_newline(self, t):
@@ -60,4 +130,4 @@ class Lexer(object):
             tok = self.lexer.token()
             if not tok: 
                break
-            print(tok) # FIXME: imprimamos desde la función que reconoce el patrón
+            #print(tok) # FIXME: imprimamos desde la función que reconoce el patrón
