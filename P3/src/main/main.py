@@ -1,7 +1,12 @@
 from analisis.sintactico import Parser
 from analisis.lexico import Lexer
 
-data = """42"""
+data =''
+if len(sys.argv) > 1:
+    reader = open(sys.argv[1], 'r')
+    data = reader.read()
+else:
+    data = """42"""
 
 scanner = Lexer()
 scanner.build()
