@@ -42,9 +42,8 @@ class Parser:
 
     
     def S(self):
-        self.eat(2) # FIXME: Borrar este paso de empate y programar los siguientes pasos de prueba
-        #declaraciones()
-        #sentencias()
+        self.declaraciones()
+        self.sentencias()
         
 
     ########################################################################
@@ -52,3 +51,113 @@ class Parser:
     ##                    TODO: Funciones por cada NT                     ##
     ##                                                                    ##
     ########################################################################
+
+    def declaraciones(self):
+        self.declaraciones()
+        self.declaraciones_p()
+
+    def declaraciones_p(self):
+        if self.token_actual in [ClaseLexica.INT.value, ClaseLexica.FLOAT.value]:
+            self.declaracion()
+            self.declaraciones_p()
+
+    def declaracion(self):
+        self.tipo()
+        self.lista_var()
+        self.eat(ClaseLexica.PYC.value)
+
+    def tipo(self):
+        if self.token_actual == ClaseLexica.INT.value:
+            self.eat(ClaseLexica.INT.value)
+        elif self.token_actual == ClaseLexica.FLOAT.value:
+            self.eat(ClaseLexica.FLOAT.value)
+        else:
+            self.error("Se espera 'int' o 'float'")
+
+    def lista_var(self):
+        """lista_var → identificador lista_var'"""
+        self.eat(ClaseLexica.ID.value)
+        self.lista_var_p()
+
+    def lista_var_p(self):
+        """lista_var' → , identificador lista_var' | ε"""
+        if self.token_actual == ClaseLexica.COMA.value:
+            self.eat(ClaseLexica.COMA.value)
+            self.eat(ClaseLexica.ID.value)
+            self.lista_var_p()
+
+    # === Sentencias ===
+
+    def sentencias(self):
+        """sentencias → sentencia sentencias'"""
+        self.sentencia()
+        self.sentencias_p()
+
+    def sentencias_p(self):
+        """sentencias' → sentencia sentencias' | ε"""
+        if self.token_actual in [ClaseLexica.ID.value,ClaseLexica.IF.value,ClaseLexica.WHILE.value]:
+            self.sentencia()
+            self.sentencias_p()
+
+    def sentencia(self):
+        """sentencia → sentencia_matched | sentencia_unmatched"""
+        if self.token_actual == ClaseLexica.ID.value:
+            # sentencia_matched: asignación
+            self.eat(ClaseLexica.ID.value)
+            self.eat(ClaseLexica.EQ.value)
+            self.expresion()
+            self.eat(ClaseLexica.PYC.value)
+        elif self.token_actual == ClaseLexica.IF.value:
+            self.eat(ClaseLexica.IF.value)
+            self.eat(ClaseLexica.PARIZQ.value)
+            self.expresion()
+            self.eat(ClaseLexica.PARDER.value)
+            self.sentencia()
+            if self.token_actual == ClaseLexica.ELSE.value:
+                self.eat(ClaseLexica.ELSE.value)
+                self.sentencia()
+        elif self.token_actual == ClaseLexica.WHILE.value:
+            self.eat(ClaseLexica.WHILE.value)
+            self.eat(ClaseLexica.PARIZQ.value)
+            self.expresion()
+            self.eat(ClaseLexica.PARDER.value)
+            self.sentencia()
+        else:
+            self.error("Sentencia no válida")
+
+    # === Expresiones ===
+
+    def expresion(self):
+        """expresion → expresion_suma"""
+        self.expresion_suma()
+
+    def expresion_suma(self):
+        """expresion_suma → expresion_suma + expresion_mult
+                          | expresion_suma - expresion_mult
+                          | expresion_mult"""
+        self.expresion_mult()
+        while self.token_actual in [ClaseLexica.SUMA.value, ClaseLexica.RESTA.value]:
+            self.eat(self.token_actual)
+            self.expresion_mult()
+
+    def expresion_mult(self):
+        """expresion_mult → expresion_mult * expresion_base
+                          | expresion_mult / expresion_base
+                          | expresion_base"""
+        self.expresion_base()
+        while self.token_actual in [ClaseLexica.MULT.value, ClaseLexica.DIV.value]:
+            self.eat(self.token_actual)
+            self.expresion_base()
+
+    def expresion_base(self):
+        """expresion_base → identificador | numero | ( expresion )"""
+        if self.token_actual == ClaseLexica.ID.value:
+            self.eat(ClaseLexica.ID.value)
+        elif self.token_actual == ClaseLexica.NUMERO.value:
+            self.eat(ClaseLexica.NUMERO.value)
+        elif self.token_actual == ClaseLexica.PARIZQ.value:
+            self.eat(ClaseLexica.PARIZQ.value)
+            self.expresion()
+            self.eat(ClaseLexica.PARDER.value)
+        else:
+            self.error("Se esperaba un identificador, número o paréntesis")

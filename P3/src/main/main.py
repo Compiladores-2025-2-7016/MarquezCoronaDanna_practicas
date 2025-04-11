@@ -1,3 +1,4 @@
+import sys
 from analisis.sintactico import Parser
 from analisis.lexico import Lexer
 

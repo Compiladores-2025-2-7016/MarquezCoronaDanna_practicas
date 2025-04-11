@@ -1,10 +1,19 @@
 from enum import Enum
 
 class ClaseLexica(Enum):
-    PALABRA = 1 
-    NUMERO = 2
-    PARIZQ = 3
-    PARDER = 4
-    ESPACIO = 5
-    INT = 6
-    # TODO: agregar las clases léxicas restantes
+    ELSE = 2
+    WHILE = 3
+    INT = 4
+    FLOAT = 5
+    ID = 6
+    NUMERO = 7
+    ESPACIO = 8
+    PARIZQ = 9
+    PARDER = 10
+    COMA = 11
+    PYC = 12
+    EQ = 13
+    SUMA = 14
+    RESTA = 15
+    MULT = 16
+    DIV = 17
