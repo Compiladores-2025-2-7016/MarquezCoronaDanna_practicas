@@ -10,6 +10,4 @@ class ComponenteLexico(): # también llamado token
 
 
     def __str__(self):
-        # FIXME: cambiar la representación en cadena del objeto 
-        return str(self)
-    
+         return '<{}, {}>'.format(self.clase,self.lexema)

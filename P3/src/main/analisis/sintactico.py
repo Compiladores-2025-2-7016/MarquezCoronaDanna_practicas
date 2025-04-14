@@ -53,7 +53,7 @@ class Parser:
     ########################################################################
 
     def declaraciones(self):
-        self.declaraciones()
+        self.declaracion()
         self.declaraciones_p()
 
     def declaraciones_p(self):
@@ -86,8 +86,6 @@ class Parser:
             self.eat(ClaseLexica.ID.value)
             self.lista_var_p()
 
-    # === Sentencias ===
-
     def sentencias(self):
         """sentencias → sentencia sentencias'"""
         self.sentencia()
@@ -104,7 +102,7 @@ class Parser:
         if self.token_actual == ClaseLexica.ID.value:
             # sentencia_matched: asignación
             self.eat(ClaseLexica.ID.value)
-            self.eat(ClaseLexica.EQ.value)
+            self.eat(ClaseLexica.IG.value)
             self.expresion()
             self.eat(ClaseLexica.PYC.value)
         elif self.token_actual == ClaseLexica.IF.value:
@@ -113,9 +111,8 @@ class Parser:
             self.expresion()
             self.eat(ClaseLexica.PARDER.value)
             self.sentencia()
-            if self.token_actual == ClaseLexica.ELSE.value:
-                self.eat(ClaseLexica.ELSE.value)
-                self.sentencia()
+            self.eat(ClaseLexica.ELSE.value)
+            self.sentencia()
         elif self.token_actual == ClaseLexica.WHILE.value:
             self.eat(ClaseLexica.WHILE.value)
             self.eat(ClaseLexica.PARIZQ.value)
@@ -124,8 +121,6 @@ class Parser:
             self.sentencia()
         else:
             self.error("Sentencia no válida")
-
-    # === Expresiones ===
 
     def expresion(self):
         """expresion → expresion_suma"""
@@ -153,8 +148,8 @@ class Parser:
         """expresion_base → identificador | numero | ( expresion )"""
         if self.token_actual == ClaseLexica.ID.value:
             self.eat(ClaseLexica.ID.value)
-        elif self.token_actual == ClaseLexica.NUMERO.value:
-            self.eat(ClaseLexica.NUMERO.value)
+        elif self.token_actual == ClaseLexica.NUM.value:
+            self.eat(ClaseLexica.NUM.value)
         elif self.token_actual == ClaseLexica.PARIZQ.value:
             self.eat(ClaseLexica.PARIZQ.value)
             self.expresion()
